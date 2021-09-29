@@ -14,7 +14,7 @@ enableES5();
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["getListReducer"]
+  whitelist: ["getListReducer","headerReducer"]
 };
 
 const rootReducer = combineReducers({

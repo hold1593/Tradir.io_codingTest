@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import { header } from '../Modules/headerReducer';
 import MaterialTable from 'material-table';
-import styled from 'styled-components';
+import '../css/main.css';
+import styled,{ keyframes } from 'styled-components';
 // 아이콘용
 import { forwardRef } from 'react';
 import AddBox from '@material-ui/icons/AddBox';
@@ -23,6 +24,22 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
+const BeerList = styled.div`
+  height: 100vh;
+  background-color: #bcaaa4;
+`;
+const HomeButton = styled.button`
+  margin: 20px;
+  border: none;
+  color: #212121;
+  background-color: #bcaaa4;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  &:hover{
+    cursor: pointer;
+    color: #ffffff;
+  }
+`
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -58,14 +75,14 @@ const List = () => {
   }
 
   return (
-    <div>
-      <button onClick={() => moveToHome()}>Home</button>
+    <BeerList>
+      <HomeButton onClick={() => moveToHome()}>⇦ Home</HomeButton>
       <MaterialTable
         onColumnDragged={handleColumnDrag}
         icons={tableIcons}
         columns={headers}
         data={
-          beers.map((e,idx) => {
+          beers.map((e) => {
             return(
               {
                 image: <img src={e.image_url} height="50" width="auto"/>,
@@ -78,7 +95,7 @@ const List = () => {
         }
         title="Beer List"
       />
-    </div>
+    </BeerList>
   )
 }
 

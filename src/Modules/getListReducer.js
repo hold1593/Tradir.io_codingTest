@@ -11,7 +11,7 @@ const initialState = {
   list : []
 }
 
-export default function getListReducer(state=initialState,action){
+export default function getListReducer(state=initialState, action){
   switch(action.type) {
     case GET_LIST :
       return {
