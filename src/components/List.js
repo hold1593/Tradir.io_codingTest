@@ -1,7 +1,11 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom'
+import { header } from '../Modules/headerReducer';
 import MaterialTable from 'material-table';
-
+import styled from 'styled-components';
+// 아이콘용
 import { forwardRef } from 'react';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -39,22 +43,27 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-
 const List = () => {
   const beers = useSelector(state => state.getListReducer.list);
-
+  const headers = useSelector(state => state.headerReducer.columns);
+  const dispatch = useDispatch();
+  const history = useHistory();
   
-  console.log(beers)
+  const handleColumnDrag = async(sourceIndex, destinationIndex) => {
+    await dispatch(header(sourceIndex,destinationIndex));
+  }
+
+  const moveToHome = () => {
+    history.push('./home');
+  }
+
   return (
     <div>
+      <button onClick={() => moveToHome()}>Home</button>
       <MaterialTable
+        onColumnDragged={handleColumnDrag}
         icons={tableIcons}
-        columns={[
-          { title: '이미지', field: 'image' },
-          { title: '상품명', field: 'name' },
-          { title: '알콜도수', field: 'alcohol' },
-          { title: '이스트', field: 'yeast' },
-        ]}
+        columns={headers}
         data={
           beers.map((e,idx) => {
             return(
