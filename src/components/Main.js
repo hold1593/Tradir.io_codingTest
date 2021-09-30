@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom'
-import { getBeerList } from '../Modules/getListReducer';
 import styled,{ keyframes } from 'styled-components';
+import { getBeerList } from '../Modules/getListReducer';
 import '../css/main.css';
 
 const ani = keyframes`
@@ -46,6 +46,7 @@ const Button = styled.button`
   margin-bottom: 20px;
   &:hover{
     cursor: pointer;
+    color: #f5f5f5;
     background-color: #8c7b75;
     animation-duration: 0.5s;
     animation-timing-function: ease-out;
@@ -59,14 +60,15 @@ const Main = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const moveToBeerList = async() => {
-    await dispatch(getBeerList());
+  const moveToBeerList = () => {
+    dispatch(getBeerList());
     history.push('./beerList');
   }
+
   const moveToCart = async() => {
     history.push('./cart');
   }
-
+  
   return (
     <Home>
       <HomeTitle>Tradir Beer</HomeTitle>

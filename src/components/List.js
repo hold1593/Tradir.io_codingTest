@@ -1,11 +1,11 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import React, {useState,useEffect} from 'react'
+import { useSelector,useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import { header } from '../Modules/headerReducer';
 import MaterialTable from 'material-table';
 import '../css/main.css';
-import styled,{ keyframes } from 'styled-components';
+import styled from 'styled-components';
+import Filter from './Filter';
 // 아이콘용
 import { forwardRef } from 'react';
 import AddBox from '@material-ui/icons/AddBox';
@@ -25,19 +25,17 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
 const BeerList = styled.div`
-  height: 100vh;
-  background-color: #bcaaa4;
+  padding: 50px;
 `;
 const HomeButton = styled.button`
-  margin: 20px;
   border: none;
-  color: #212121;
-  background-color: #bcaaa4;
+  color: #bcaaa4;
+  background-color: transparent;
   font-size: 2rem;
   margin-bottom: 20px;
   &:hover{
     cursor: pointer;
-    color: #ffffff;
+    color: #8c7b75;
   }
 `
 const tableIcons = {
@@ -61,6 +59,10 @@ const tableIcons = {
 };
 
 const List = () => {
+  const [oneCk, setOneCk] = useState(true);
+  const [twoCk, setTwoCk] = useState(true);
+  const [threeCk, setThreeCk] = useState(true);
+ 
   const beers = useSelector(state => state.getListReducer.list);
   const headers = useSelector(state => state.headerReducer.columns);
   const dispatch = useDispatch();
@@ -69,21 +71,55 @@ const List = () => {
   const handleColumnDrag = async(sourceIndex, destinationIndex) => {
     await dispatch(header(sourceIndex,destinationIndex));
   }
-
   const moveToHome = () => {
     history.push('./home');
+  }
+ 
+  function filterFunc(){
+    let arr = beers.reduce((acc, cur) => {
+      // 0이상이면서 6미만인 경우
+      if(oneCk && cur.abv >= 0 && cur.abv < 6){
+        acc.push(cur);
+      }else if(twoCk && cur.abv >=6 && cur.abv < 11){// 6이상이면서 11미만인 경우
+        acc.push(cur);
+      }else if(threeCk && cur.abv >= 11){ // 11 이상일 경우
+        acc.push(cur);
+      }
+      return acc;
+    },[]);
+    return arr;
   }
 
   return (
     <BeerList>
       <HomeButton onClick={() => moveToHome()}>⇦ Home</HomeButton>
+      <Filter 
+      oneCk={oneCk}
+      twoCk={twoCk}
+      threeCk={threeCk}
+      setOneCk={setOneCk}
+      setTwoCk={setTwoCk}
+      setThreeCk={setThreeCk}
+      />
       <MaterialTable
         onColumnDragged={handleColumnDrag}
         icons={tableIcons}
         columns={headers}
         data={
+          oneCk&&twoCk&&threeCk ?
           beers.map((e) => {
-            return(
+            return (
+              {
+                image: <img src={e.image_url} height="50" width="auto"/>,
+                name: e.name, 
+                alcohol: e.abv, 
+                yeast: e.ingredients.yeast
+              }
+            )
+          })
+          :
+          filterFunc().map((e) => {
+            return (
               {
                 image: <img src={e.image_url} height="50" width="auto"/>,
                 name: e.name, 
@@ -93,6 +129,11 @@ const List = () => {
             )
           })
         }
+        options={{
+          search: false,
+          filtering: false,
+          selection:false,
+        }}
         title="Beer List"
       />
     </BeerList>
