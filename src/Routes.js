@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Home from "./Pages/Home";
 import BeerList from "./Pages/BeerList";
+import Cart from "./Pages/Cart";
 
 const Routes = () => {
 
@@ -14,6 +15,7 @@ const Routes = () => {
         <Switch>
           <Route path="/home" component={Home}/>
           <Route path="/beerlist" component={BeerList}/>
+          <Route path="/cart" component={Cart}/>
         </Switch>
     </Router>
   );

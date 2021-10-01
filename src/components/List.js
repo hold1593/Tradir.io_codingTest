@@ -3,7 +3,9 @@ import { useSelector,useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom'
 import { header } from '../Modules/headerReducer';
 import MaterialTable from 'material-table';
+import { Modal } from 'antd';
 import '../css/main.css';
+import 'antd/dist/antd.css';
 import styled from 'styled-components';
 import Filter from './Filter';
 // 아이콘용
@@ -62,7 +64,7 @@ const List = () => {
   const [oneCk, setOneCk] = useState(true);
   const [twoCk, setTwoCk] = useState(true);
   const [threeCk, setThreeCk] = useState(true);
- 
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const beers = useSelector(state => state.getListReducer.list);
   const headers = useSelector(state => state.headerReducer.columns);
   const dispatch = useDispatch();
@@ -74,8 +76,7 @@ const List = () => {
   const moveToHome = () => {
     history.push('./home');
   }
- 
-  function filterFunc(){
+  const filterFunc = () => {
     let arr = beers.reduce((acc, cur) => {
       // 0이상이면서 6미만인 경우
       if(oneCk && cur.abv >= 0 && cur.abv < 6){
@@ -89,8 +90,19 @@ const List = () => {
     },[]);
     return arr;
   }
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+ 
 
   return (
+    <>
     <BeerList>
       <HomeButton onClick={() => moveToHome()}>⇦ Home</HomeButton>
       <Filter 
@@ -102,6 +114,10 @@ const List = () => {
       setThreeCk={setThreeCk}
       />
       <MaterialTable
+        onRowClick={(event, rowData) => {
+          showModal();
+          console.log(rowData)
+        }}
         onColumnDragged={handleColumnDrag}
         icons={tableIcons}
         columns={headers}
@@ -137,6 +153,10 @@ const List = () => {
         title="Beer List"
       />
     </BeerList>
+    <Modal title="알콜 도수(중복 선택 가능)" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}> 
+      서비스 준비중입니다.
+    </Modal>
+    </>
   )
 }
 
