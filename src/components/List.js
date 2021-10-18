@@ -74,7 +74,7 @@ const List = () => {
     await dispatch(header(sourceIndex,destinationIndex));
   }
   const moveToHome = () => {
-    history.push('./home');
+    history.push('./');
   }
   const filterFunc = () => {
     let arr = beers.reduce((acc, cur) => {
